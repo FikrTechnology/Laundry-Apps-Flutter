@@ -1,0 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../widgets/widgets.dart';
+
+part '../routes/app_routes.dart';
+
+part '../main.dart';
+part 'login_page.dart';
+part 'splash_screen_page.dart';
+part 'home.dart';
