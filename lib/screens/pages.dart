@@ -10,3 +10,5 @@ part '../main.dart';
 part 'login_page.dart';
 part 'splash_screen_page.dart';
 part 'home.dart';
+part 'progress_list_page.dart';
+part 'done_list_page.dart';

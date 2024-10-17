@@ -45,7 +45,7 @@ class TextFieldLeading extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(
-                  color: Color(0xFFB7E0FF), // Warna border ketika fokus
+                  color: Color(0xFFE78F81), // Warna border ketika fokus
                 ),
                 borderRadius: BorderRadius.circular(8), // Radius untuk border
               ),
