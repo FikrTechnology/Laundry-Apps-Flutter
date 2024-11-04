@@ -11,9 +11,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
       ),
+      builder: (context, child) {
+        // Atur gaya status bar di sini agar diterapkan ke semua halaman
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+          statusBarColor: Colors.blue, // Ganti dengan warna yang diinginkan
+          statusBarIconBrightness: Brightness.light,
+        ));
+        return child!;
+      },
       initialRoute: AppRoutes.splash,
       routes: AppRoutes.getRoutes(),
     );

@@ -12,3 +12,5 @@ part 'splash_screen_page.dart';
 part 'home.dart';
 part 'progress_list_page.dart';
 part 'done_list_page.dart';
+part 'customer_detail.dart';
+part 'update_customer.dart';

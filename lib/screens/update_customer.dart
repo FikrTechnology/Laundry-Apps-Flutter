@@ -1,13 +1,13 @@
 part of 'pages.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class UpdateCustomerPage extends StatefulWidget {
+  const UpdateCustomerPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<UpdateCustomerPage> createState() => _UpdateCustomerPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _UpdateCustomerPageState extends State<UpdateCustomerPage> {
   int currentPageIndex = 0;
   // List pilihan paket laundry
   final Map<String, double> laundryPackages = {
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Input data Customer',
+                  'Update data Customer',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
@@ -279,7 +279,9 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, AppRoutes.home);
+                },
                 child: Container(
                   height: 30,
                   width: 50,
@@ -289,7 +291,6 @@ class _HomePageState extends State<HomePage> {
                         Radius.circular(16),
                       ),
                     ),
-                    color: Color(0xFFF5D2CD),
                   ),
                   child: Padding(
                     padding:
@@ -314,6 +315,7 @@ class _HomePageState extends State<HomePage> {
                         Radius.circular(16),
                       ),
                     ),
+                    color: Color(0xFFF5D2CD),
                   ),
                   child: Padding(
                     padding:

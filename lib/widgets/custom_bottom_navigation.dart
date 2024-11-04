@@ -1,59 +1,48 @@
 part of 'widgets.dart';
 
-class CustomBottomNavigationBar extends StatefulWidget {
-  final List<Widget> pages; // List of pages for navigation
-  final int initialIndex; // Starting index for the navigation
-  const CustomBottomNavigationBar(
-      {Key? key, required this.pages, this.initialIndex = 0})
-      : super(key: key);
+// Bottom Navigation Bar Widget
+class BottomNavBar extends StatelessWidget {
+  final int currentPageIndex;
+  final ValueChanged<int> onItemSelected;
 
-  @override
-  _CustomBottomNavigationBarState createState() =>
-      _CustomBottomNavigationBarState();
-}
-
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  int _selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.initialIndex;
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  const BottomNavBar({required this.currentPageIndex, required this.onItemSelected, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Reusable Bottom Nav Bar'),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Container(
+        height: 60,
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          color: const Color(0xFFB7E0FF),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildNavItem(context, 'assets/icons/home.svg', 0),
+            _buildNavItem(context, 'assets/icons/onprogress.svg', 1),
+            _buildNavItem(context, 'assets/icons/success.svg', 2),
+          ],
+        ),
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: widget.pages, // The list of pages passed to the widget
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped, // Update the page on tap
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.access_time),
-            label: 'Progress',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.done),
-            label: 'Done',
-          ),
-        ],
+    );
+  }
+
+  Widget _buildNavItem(BuildContext context, String iconPath, int index) {
+    return GestureDetector(
+      onTap: () => onItemSelected(index),
+      child: Container(
+        height: 30,
+        width: 50,
+        decoration: ShapeDecoration(
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
+          color: currentPageIndex == index ? const Color(0xFFF5D2CD) : Colors.transparent,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 3),
+          child: SvgPicture.asset(iconPath, width: 24),
+        ),
       ),
     );
   }
