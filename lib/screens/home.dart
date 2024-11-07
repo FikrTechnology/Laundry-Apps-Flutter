@@ -8,34 +8,43 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameCustomerCtrl = TextEditingController();
+  final TextEditingController _noTlpCtrl = TextEditingController();
+  final TextEditingController _addressCtrl = TextEditingController();
+  final TextEditingController _packageCtrl = TextEditingController();
+  final TextEditingController _weightCtrl = TextEditingController();
+  final TextEditingController _ammountCtrl = TextEditingController();
   int currentPageIndex = 0;
   // List pilihan paket laundry
   final Map<String, double> laundryPackages = {
-    'Cuci Kering Setrika': 5000.0,
-    'Cuci Saja': 3000.0,
-    'Setrika Saja': 2000.0,
-    'Cuci Express (Selesai 1 Hari)': 7000.0,
-    'Cuci Selimut': 10000.0,
+    'Cuci Kering Setrika': 5000,
+    'Cuci Saja': 3000,
+    'Setrika Saja': 2000,
+    'Cuci Express (Selesai 1 Hari)': 7000,
+    'Cuci Selimut': 10000,
   };
 
   // Paket yang dipilih oleh pengguna
   String? selectedPackage;
 
   // Berat laundry dalam kg (diinput oleh pengguna)
-  double weight = 0.0;
+  int weight = 0;
 
   // Harga yang dihitung (harga = berat * harga per kg dari paket terpilih)
-  double calculatedPrice = 0.0;
+  int calculatedPrice = 0;
 
   // Function untuk menghitung harga berdasarkan berat dan paket
   void calculatePrice() {
     if (selectedPackage != null && weight > 0) {
       setState(() {
-        calculatedPrice = weight * laundryPackages[selectedPackage!]!;
+        calculatedPrice = (weight * laundryPackages[selectedPackage!]!).toInt();
+        _ammountCtrl.text = calculatedPrice.toString();
       });
     } else {
       setState(() {
-        calculatedPrice = 0.0;
+        calculatedPrice = 0;
+        _ammountCtrl.text = calculatedPrice.toString();
       });
     }
   }
@@ -51,216 +60,261 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Input data Customer',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Nama Customer',
-                    labelStyle: TextStyle(
-                      color: Colors.grey[400],
-                    ),
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color(0xFFE78F81), // Warna border ketika fokus
-                      ),
-                      borderRadius:
-                          BorderRadius.circular(8), // Radius untuk border
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Nomor Telepon',
-                    labelStyle: TextStyle(
-                      color: Colors.grey[400],
-                    ),
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color(0xFFE78F81), // Warna border ketika fokus
-                      ),
-                      borderRadius:
-                          BorderRadius.circular(8), // Radius untuk border
-                    ),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 30),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Alamat',
-                    labelStyle: TextStyle(
-                      color: Colors.grey[400],
-                    ),
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color(0xFFE78F81), // Warna border ketika fokus
-                      ),
-                      borderRadius:
-                          BorderRadius.circular(8), // Radius untuk border
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: "Pilih Paket Laundry",
-                    labelStyle: TextStyle(
-                      color: Colors.grey[400],
-                    ),
-                    border: const OutlineInputBorder(),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color(0xFFE78F81), // Warna border ketika fokus
-                      ),
-                      borderRadius:
-                          BorderRadius.circular(8), // Radius untuk border
-                    ),
-                  ),
-                  value: selectedPackage,
-                  items: laundryPackages.keys.map((package) {
-                    return DropdownMenuItem<String>(
-                      value: package,
-                      child: Text(package),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedPackage = newValue;
-                    });
-                    calculatePrice(); // Hitung harga saat paket diubah
-                  },
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Flexible(
-                      flex: 2,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: "Berat",
-                          labelStyle: TextStyle(
-                            color: Colors.grey[400],
-                          ),
-                          border: const OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color(
-                                  0xFFE78F81), // Warna border ketika fokus
-                            ),
-                            borderRadius:
-                                BorderRadius.circular(8), // Radius untuk border
-                          ),
-                          prefix: Padding(
-                            padding: const EdgeInsets.only(
-                                right:
-                                    8.0), // Memberikan jarak antara teks "KG" dan input
-                            child: Text(
-                              "Kg",
-                              style: TextStyle(color: Colors.grey[400]),
-                            ),
-                          ),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          setState(() {
-                            weight = double.tryParse(value) ?? 0.0;
-                          });
-                          calculatePrice(); // Hitung harga saat berat diubah
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    // Field untuk menampilkan harga (tidak bisa di-edit)
-                    Flexible(
-                      flex: 3,
-                      child: TextField(
-                        enabled: false,
-                        decoration: InputDecoration(
-                          labelText: "Harga Total",
-                          border: const OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(8), // Radius untuk border
-                          ),
-                        ),
-                        readOnly: true, // Field tidak dapat diubah
-                        controller: TextEditingController(
-                          text: calculatedPrice > 0
-                              ? 'Rp ${calculatedPrice.toStringAsFixed(0)}'
-                              : 'Rp 0',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 60,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(
-                        context, AppRoutes.onProgress);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize:
-                        Size(MediaQuery.of(context).size.width * 1, 48),
-                    backgroundColor: const Color(0xFFE78F81),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'Selesai',
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Input data Customer',
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500),
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '*Harap isi nama customer';
+                      }
+                      return null;
+                    },
+                    maxLength: 20,
+                    controller: _nameCustomerCtrl,
+                    decoration: InputDecoration(
+                      labelText: 'Nama Customer',
+                      labelStyle: TextStyle(
+                        color: Colors.grey[400],
+                      ),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color(0xFFE78F81), // Warna border ketika fokus
+                        ),
+                        borderRadius:
+                            BorderRadius.circular(8), // Radius untuk border
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '*Harap isi nomor telepon';
+                      }
+                      return null;
+                    },
+                    maxLength: 13,
+                    controller: _noTlpCtrl,
+                    decoration: InputDecoration(
+                      labelText: 'Nomor Telepon',
+                      labelStyle: TextStyle(
+                        color: Colors.grey[400],
+                      ),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color(0xFFE78F81), // Warna border ketika fokus
+                        ),
+                        borderRadius:
+                            BorderRadius.circular(8), // Radius untuk border
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '*Harap isi alamat customer';
+                      }
+                      return null;
+                    },
+                    maxLength: 50,
+                    controller: _addressCtrl,
+                    decoration: InputDecoration(
+                      labelText: 'Alamat',
+                      labelStyle: TextStyle(
+                        color: Colors.grey[400],
+                      ),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color(0xFFE78F81), // Warna border ketika fokus
+                        ),
+                        borderRadius:
+                            BorderRadius.circular(8), // Radius untuk border
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  DropdownButtonFormField<String>(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '*Harap pilih paket laundry';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Pilih Paket Laundry",
+                      labelStyle: TextStyle(
+                        color: Colors.grey[400],
+                      ),
+                      border: const OutlineInputBorder(),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color(0xFFE78F81), // Warna border ketika fokus
+                        ),
+                        borderRadius:
+                            BorderRadius.circular(8), // Radius untuk border
+                      ),
+                    ),
+                    value: selectedPackage,
+                    items: laundryPackages.keys.map((package) {
+                      return DropdownMenuItem<String>(
+                        value: package,
+                        child: Text(package),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedPackage = newValue;
+                        _packageCtrl.text = newValue.toString();
+                      });
+                      calculatePrice(); // Hitung harga saat paket diubah
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Flexible(
+                        flex: 2,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '*Harap isi berat laundry';
+                            }
+                            return null;
+                          },
+                          maxLength: 2,
+                          controller: _weightCtrl,
+                          decoration: InputDecoration(
+                            labelText: "Berat",
+                            labelStyle: TextStyle(
+                              color: Colors.grey[400],
+                            ),
+                            border: const OutlineInputBorder(),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color(
+                                    0xFFE78F81), // Warna border ketika fokus
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                  8), // Radius untuk border
+                            ),
+                            prefix: Padding(
+                              padding: const EdgeInsets.only(
+                                  right:
+                                      8.0), // Memberikan jarak antara teks "KG" dan input
+                              child: Text(
+                                "Kg",
+                                style: TextStyle(color: Colors.grey[400]),
+                              ),
+                            ),
+                            counterText: '',
+                          ),
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            setState(() {
+                              weight = int.tryParse(value) ?? 0;
+                            });
+                            calculatePrice(); // Hitung harga saat berat diubah
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      // Field untuk menampilkan harga (tidak bisa di-edit)
+                      Flexible(
+                        flex: 3,
+                        child: TextFormField(
+                          enabled: false,
+                          decoration: InputDecoration(
+                            labelText: "Harga Total",
+                            border: const OutlineInputBorder(),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                  8), // Radius untuk border
+                            ),
+                          ),
+                          readOnly: true, // Field tidak dapat diubah
+                          controller: TextEditingController(
+                            text: calculatedPrice > 0
+                                ? 'Rp ${calculatedPrice.toStringAsFixed(0)}'
+                                : 'Rp 0',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 60,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.pushReplacementNamed(
+                            context, AppRoutes.onProgress);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize:
+                          Size(MediaQuery.of(context).size.width * 1, 48),
+                      backgroundColor: const Color(0xFFE78F81),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Selesai',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -327,6 +381,13 @@ class _HomePageState extends State<HomePage> {
               ),
               GestureDetector(
                 onTap: () {
+                  if (_formKey.currentState!.validate()) {
+                    // If the form is valid, display a snackbar. In the real world,
+                    // you'd often call a server or save the information in a database.
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Processing Data')),
+                    );
+                  }
                   Navigator.pushReplacementNamed(
                       context, AppRoutes.doneProgress);
                 },
