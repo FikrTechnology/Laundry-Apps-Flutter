@@ -4,12 +4,14 @@ class TextFieldLeading extends StatelessWidget {
   final String label;
   final String hintText;
   final IconData icon;
+  final TextEditingController controller;
 
   const TextFieldLeading({
     super.key,
     required this.label,
     required this.hintText,
     required this.icon,
+    required this.controller,
   });
 
   @override
@@ -28,6 +30,7 @@ class TextFieldLeading extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           TextField(
+            controller: controller,
             decoration: InputDecoration(
               labelText: hintText,
               labelStyle: TextStyle(color: Colors.grey[400]),

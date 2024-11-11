@@ -32,8 +32,7 @@ class _ProgressListPageState extends State<ProgressListPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushReplacementNamed(
-                      context, AppRoutes.customerDetail);
+                  Navigator.pushNamed(context, AppRoutes.customerDetail);
                 },
                 child: Card(
                   margin: const EdgeInsets.all(0),

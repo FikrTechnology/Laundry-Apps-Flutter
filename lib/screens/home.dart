@@ -293,6 +293,18 @@ class _HomePageState extends State<HomePage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
+                            String formattedDate = DateFormat('d MMMM yyyy', 'id_ID').format(DateTime.now());
+                            String formattedTime = DateFormat('HH:mm').format(DateTime.now());
+                        Onprogress onprogress = Onprogress(
+                            name: _nameCustomerCtrl.text,
+                            address: _addressCtrl.text,
+                            phone: _noTlpCtrl.text,
+                            weight: _weightCtrl.text,
+                            amount: _ammountCtrl.text,
+                            package: _packageCtrl.text,
+                            date: formattedDate,
+                            time: formattedTime);
+                            print(onprogress);
                         Navigator.pushReplacementNamed(
                             context, AppRoutes.onProgress);
                       }

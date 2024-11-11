@@ -8,6 +8,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameCtrl = TextEditingController();
+  final TextEditingController _passwordCtrl = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,18 +29,20 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 50,
                 ),
-                const TextFieldLeading(
+                TextFieldLeading(
                   label: 'Username',
                   hintText: 'Masukan Username',
                   icon: Icons.email_outlined,
+                  controller: _usernameCtrl,
                 ),
                 const SizedBox(
                   height: 24,
                 ),
-                const TextFieldLeading(
+                TextFieldLeading(
                   label: 'Password',
                   hintText: 'Masukan Password',
                   icon: Icons.lock_outline,
+                  controller: _passwordCtrl,
                 ),
               ],
             ),
@@ -54,8 +59,30 @@ class _LoginPageState extends State<LoginPage> {
             ),
             padding: const EdgeInsets.symmetric(vertical: 10),
           ),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, AppRoutes.home);
+          onPressed: () async {
+            String username = _usernameCtrl.text;
+            String password = _passwordCtrl.text;
+            await LoginService().login(username, password).then((value) {
+              if (value == true) {
+                Navigator.pushReplacementNamed(context, AppRoutes.home);
+              } else {
+                AlertDialog alertDialog = AlertDialog(
+                  content: const Text('Username atau password tidak valid'),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
+                      child: const Text('OK'),
+                    )
+                  ],
+                );
+                showDialog(
+                    context: context, builder: (context) => alertDialog);
+              }
+            });
           },
           child: const Text(
             'Masuk',

@@ -202,8 +202,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(
-                          context, AppRoutes.updateCustomer);
+                      Navigator.pushNamed(context, AppRoutes.updateCustomer);
                     },
                     style: ElevatedButton.styleFrom(
                       fixedSize: const Size(150, 48),
