@@ -4,3 +4,5 @@ import 'package:flutter_svg/flutter_svg.dart';
 part 'input_field_leading_widget.dart';
 part 'input_field_widget.dart';
 part 'custom_bottom_navigation.dart';
+part 'onprogress_card_widget.dart';
+part 'ondone_card_widget.dart';

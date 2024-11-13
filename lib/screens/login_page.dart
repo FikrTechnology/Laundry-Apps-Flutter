@@ -60,29 +60,29 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.symmetric(vertical: 10),
           ),
           onPressed: () async {
-            String username = _usernameCtrl.text;
-            String password = _passwordCtrl.text;
-            await LoginService().login(username, password).then((value) {
-              if (value == true) {
+            // String username = _usernameCtrl.text;
+            // String password = _passwordCtrl.text;
+            // await LoginService().login(username, password).then((value) {
+            //   if (value == true) {
                 Navigator.pushReplacementNamed(context, AppRoutes.home);
-              } else {
-                AlertDialog alertDialog = AlertDialog(
-                  content: const Text('Username atau password tidak valid'),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green),
-                      child: const Text('OK'),
-                    )
-                  ],
-                );
-                showDialog(
-                    context: context, builder: (context) => alertDialog);
-              }
-            });
+            //   } else {
+            //     AlertDialog alertDialog = AlertDialog(
+            //       content: const Text('Username atau password tidak valid'),
+            //       actions: [
+            //         ElevatedButton(
+            //           onPressed: () {
+            //             Navigator.pop(context);
+            //           },
+            //           style: ElevatedButton.styleFrom(
+            //               backgroundColor: Colors.green),
+            //           child: const Text('OK'),
+            //         )
+            //       ],
+            //     );
+            //     showDialog(
+            //         context: context, builder: (context) => alertDialog);
+            //   }
+            // });
           },
           child: const Text(
             'Masuk',

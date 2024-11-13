@@ -15,6 +15,8 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _packageCtrl = TextEditingController();
   final TextEditingController _weightCtrl = TextEditingController();
   final TextEditingController _ammountCtrl = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+
   int currentPageIndex = 0;
   // List pilihan paket laundry
   final Map<String, double> laundryPackages = {
@@ -40,11 +42,14 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         calculatedPrice = (weight * laundryPackages[selectedPackage!]!).toInt();
         _ammountCtrl.text = calculatedPrice.toString();
+        _priceController.text =
+            'Rp ${calculatedPrice.toStringAsFixed(0)}'; // Perbarui controller
       });
     } else {
       setState(() {
         calculatedPrice = 0;
         _ammountCtrl.text = calculatedPrice.toString();
+        _priceController.text = 'Rp 0'; // Perbarui controller
       });
     }
   }
@@ -277,12 +282,8 @@ class _HomePageState extends State<HomePage> {
                                   8), // Radius untuk border
                             ),
                           ),
-                          readOnly: true, // Field tidak dapat diubah
-                          controller: TextEditingController(
-                            text: calculatedPrice > 0
-                                ? 'Rp ${calculatedPrice.toStringAsFixed(0)}'
-                                : 'Rp 0',
-                          ),
+                          readOnly: true,
+                          controller: _priceController,
                         ),
                       ),
                     ],
@@ -291,10 +292,14 @@ class _HomePageState extends State<HomePage> {
                     height: 60,
                   ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                            String formattedDate = DateFormat('d MMMM yyyy', 'id_ID').format(DateTime.now());
-                            String formattedTime = DateFormat('HH:mm').format(DateTime.now());
+                        await initializeDateFormatting('id_ID', null);
+                        String formattedDate =
+                            DateFormat('d MMMM yyyy', 'id_ID')
+                                .format(DateTime.now());
+                        String formattedTime =
+                            DateFormat('HH:mm').format(DateTime.now());
                         Onprogress onprogress = Onprogress(
                             name: _nameCustomerCtrl.text,
                             address: _addressCtrl.text,
@@ -304,9 +309,12 @@ class _HomePageState extends State<HomePage> {
                             package: _packageCtrl.text,
                             date: formattedDate,
                             time: formattedTime);
-                            print(onprogress);
-                        Navigator.pushReplacementNamed(
-                            context, AppRoutes.onProgress);
+                        print(onprogress.toJson());
+
+                        await OnProgress().simpan(onprogress).then((value) {  
+                          Navigator.pushReplacementNamed(
+                              context, AppRoutes.onProgress);
+                        });
                       }
                     },
                     style: ElevatedButton.styleFrom(

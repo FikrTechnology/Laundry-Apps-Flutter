@@ -8,76 +8,48 @@ class DoneListPage extends StatefulWidget {
 }
 
 class _DoneListPageState extends State<DoneListPage> {
+  Stream<List<Ondone>> getList() async* {
+    List<Ondone> data = await OnDone().listData();
+    yield data;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        title: const Text(
+          'List Laundry selesai',
+          style: TextStyle(
+              fontWeight: FontWeight.w600, fontSize: 20, color: Colors.black),
+        ),
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'List antrian customer selesai',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Card(
-                margin: const EdgeInsets.all(0),
-                child: Padding(
-                  padding: const EdgeInsets.all(14),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '11 September 2024 19:30',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 9,
-                                color: Color(0xFF5E5E5E)),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            'Muhammad Fikrie',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                color: Colors.black),
-                          ),
-                        ],
-                      ),
-                      ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF80FFA2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: const Text(
-                            'Done',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 9,
-                                color: Colors.white),
-                          ))
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
+          child: StreamBuilder<Object>(
+              stream: getList(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasError) Text(snapshot.error.toString());
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData &&
+                    snapshot.connectionState == ConnectionState.done) {
+                  return const Center(child: Text('Tidak ada data'));
+                }
+                return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                  return CardOndone(
+                    date: snapshot.data[index].date_out, 
+                    name: snapshot.data[index].name, 
+                    onCardTap: (){
+                      Navigator.pushNamed(context, AppRoutes.customerDetail);
+                    }
+                  );
+                });
+              }),
         ),
       ),
       bottomNavigationBar: Padding(

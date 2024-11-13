@@ -8,84 +8,86 @@ class ProgressListPage extends StatefulWidget {
 }
 
 class _ProgressListPageState extends State<ProgressListPage> {
+  Stream<List<Onprogress>> getList() async* {
+    List<Onprogress> data = await OnProgress().listData();
+    yield data;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        title: const Text(
+          'List antrian customer masuk',
+          style: TextStyle(
+              fontWeight: FontWeight.w600, fontSize: 20, color: Colors.black),
+        ),
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'List antrian customer masuk',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, AppRoutes.customerDetail);
-                },
-                child: Card(
-                  margin: const EdgeInsets.all(0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '11 September 2024 19:30',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 9,
-                                  color: Color(0xFF5E5E5E)),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              'Muhammad Fikrie',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(
-                                  context, AppRoutes.doneProgress);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFFFB080),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: const Text(
-                              'Progress',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 9,
-                                  color: Colors.white),
-                            ))
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
+          child: StreamBuilder<Object>(
+              stream: getList(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasError) Text(snapshot.error.toString());
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData &&
+                    snapshot.connectionState == ConnectionState.done) {
+                  return const Center(child: Text('Tidak ada data'));
+                }
+                return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    print(snapshot.data[index].toJson());
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: CardOnprogress(
+                        date: snapshot.data[index].date,
+                        name: snapshot.data[index].name,
+                        onCardTap: () {
+                          Navigator.pushNamed(
+                              context, AppRoutes.customerDetail);
+                        },
+                        onButtonTap: () async {
+                          try {
+                            await initializeDateFormatting('id_ID', null);
+                            String formattedDate =
+                                DateFormat('d MMMM yyyy', 'id_ID')
+                                    .format(DateTime.now());
+                            String formattedTime =
+                                DateFormat('HH:mm').format(DateTime.now());
+                            Ondone done = Ondone(
+                                name: snapshot.data[index].name,
+                                address: snapshot.data[index].address,
+                                phone: snapshot.data[index].phone,
+                                weight: snapshot.data[index].weight,
+                                amount: snapshot.data[index].amount,
+                                package: snapshot.data[index].package,
+                                date_in: snapshot.data[index].date,
+                                time_in: snapshot.data[index].time,
+                                date_out: formattedDate,
+                                time_out: formattedTime);
+
+                            await OnDone().simpan(done);
+
+                            // Menghapus data dari tabel OnProgress setelah penyimpanan berhasil
+                            await OnProgress().hapus(snapshot.data[index]);
+
+                            // Navigasi setelah semua operasi berhasil
+                            Navigator.pushReplacementNamed(
+                                context, AppRoutes.doneProgress);
+                          } catch (e) {
+                            print("Terjadi kesalahan: $e");
+                          }
+                        },
+                      ),
+                    );
+                  },
+                );
+              }),
         ),
       ),
       bottomNavigationBar: Padding(
