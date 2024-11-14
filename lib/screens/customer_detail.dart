@@ -9,7 +9,7 @@ class CustomerDetailPage extends StatefulWidget {
 }
 
 class _CustomerDetailPageState extends State<CustomerDetailPage> {
-  Stream<Onprogress> getList() async* {
+  Stream<Onprogress> getData() async* {
     Onprogress data = await OnProgress()
         .getById(widget.customerDetailOnProgress.id.toString());
     yield data;
@@ -25,7 +25,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: StreamBuilder<Object>(
-              stream: getList(),
+              stream: getData(),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasError) Text(snapshot.error.toString());
                 if (snapshot.connectionState != ConnectionState.done) {
@@ -243,7 +243,60 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                           ),
                         ),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            AlertDialog alert = AlertDialog(
+                              content:
+                                  const Text('Yakin ingin menghapus data ini?'),
+                              actions: [
+                                StreamBuilder<Object>(
+                                  stream: getData(),
+                                  builder: (context, AsyncSnapshot snapshot) =>
+                                      ElevatedButton(
+                                    onPressed: () async {
+                                      await OnProgress()
+                                          .hapus(snapshot.data)
+                                          .then((value) {
+                                        Navigator.pushReplacementNamed(
+                                            context, AppRoutes.onProgress);
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFFF8082),
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8),
+                                        ),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Ya',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF80FFA2),
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8),
+                                      ),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Tidak',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            );
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) => alert);
+                          },
                           style: ElevatedButton.styleFrom(
                             fixedSize: const Size(150, 48),
                             backgroundColor: const Color(0xFFFF8082),
