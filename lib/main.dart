@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         return child!;
       },
       initialRoute: AppRoutes.splash,
-      routes: AppRoutes.getRoutes(),
+      onGenerateRoute: AppRoutes.generateRoute,
     );
   }
 }

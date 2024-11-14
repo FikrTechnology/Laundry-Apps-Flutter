@@ -22,3 +22,4 @@ part 'progress_list_page.dart';
 part 'done_list_page.dart';
 part 'customer_detail.dart';
 part 'update_customer.dart';
+part 'customer_detail_ondone_pages.dart';

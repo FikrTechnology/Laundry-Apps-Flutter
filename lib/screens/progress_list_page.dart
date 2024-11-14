@@ -48,8 +48,8 @@ class _ProgressListPageState extends State<ProgressListPage> {
                         date: snapshot.data[index].date,
                         name: snapshot.data[index].name,
                         onCardTap: () {
-                          Navigator.pushNamed(
-                              context, AppRoutes.customerDetail);
+                          Navigator.pushNamed(context, AppRoutes.customerDetail,
+                              arguments: snapshot.data[index]);
                         },
                         onButtonTap: () async {
                           try {
@@ -66,10 +66,10 @@ class _ProgressListPageState extends State<ProgressListPage> {
                                 weight: snapshot.data[index].weight,
                                 amount: snapshot.data[index].amount,
                                 package: snapshot.data[index].package,
-                                date_in: snapshot.data[index].date,
-                                time_in: snapshot.data[index].time,
-                                date_out: formattedDate,
-                                time_out: formattedTime);
+                                dateIn: snapshot.data[index].date,
+                                timeIn: snapshot.data[index].time,
+                                dateOut: formattedDate,
+                                timeOut: formattedTime);
 
                             await OnDone().simpan(done);
 

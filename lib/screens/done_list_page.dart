@@ -39,16 +39,18 @@ class _DoneListPageState extends State<DoneListPage> {
                   return const Center(child: Text('Tidak ada data'));
                 }
                 return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                  return CardOndone(
-                    date: snapshot.data[index].date_out, 
-                    name: snapshot.data[index].name, 
-                    onCardTap: (){
-                      Navigator.pushNamed(context, AppRoutes.customerDetail);
-                    }
-                  );
-                });
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      print(snapshot.data[index].toJson());
+                      return CardOndone(
+                          date: snapshot.data[index].dateOut,
+                          name: snapshot.data[index].name,
+                          onCardTap: () {
+                            Navigator.pushNamed(
+                                context, AppRoutes.customerDetailOnDone,
+                                arguments: snapshot.data[index]);
+                          });
+                    });
               }),
         ),
       ),
