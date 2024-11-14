@@ -17,7 +17,6 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _ammountCtrl = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
 
-  int currentPageIndex = 0;
   // List pilihan paket laundry
   final Map<String, double> laundryPackages = {
     'Cuci Kering Setrika': 5000,

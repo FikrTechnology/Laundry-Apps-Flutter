@@ -1,7 +1,9 @@
 part of 'pages.dart';
 
 class UpdateCustomerPage extends StatefulWidget {
-  const UpdateCustomerPage({super.key});
+  final Onprogress customerDetailOnProgressUpdate;
+  const UpdateCustomerPage(
+      {super.key, required this.customerDetailOnProgressUpdate});
 
   @override
   State<UpdateCustomerPage> createState() => _UpdateCustomerPageState();
@@ -15,7 +17,33 @@ class _UpdateCustomerPageState extends State<UpdateCustomerPage> {
   final TextEditingController _packageCtrl = TextEditingController();
   final TextEditingController _weightCtrl = TextEditingController();
   final TextEditingController _ammountCtrl = TextEditingController();
-  int currentPageIndex = 0;
+  final TextEditingController _priceController = TextEditingController();
+
+  // Paket yang dipilih oleh pengguna
+  String? selectedPackage;
+
+  Future<Onprogress> getData() async {
+    Onprogress data = await OnProgress()
+        .getById(widget.customerDetailOnProgressUpdate.id.toString());
+    setState(() {
+      _nameCustomerCtrl.text = data.name;
+      _noTlpCtrl.text = data.phone;
+      _addressCtrl.text = data.address;
+      _packageCtrl.text = data.package;
+      _weightCtrl.text = data.weight;
+      _ammountCtrl.text = data.amount;
+      _priceController.text = 'Rp ${data.amount}';
+      selectedPackage = data.package;
+    });
+    return data;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   // List pilihan paket laundry
   final Map<String, double> laundryPackages = {
     'Cuci Kering Setrika': 5000,
@@ -24,9 +52,6 @@ class _UpdateCustomerPageState extends State<UpdateCustomerPage> {
     'Cuci Express (Selesai 1 Hari)': 7000,
     'Cuci Selimut': 10000,
   };
-
-  // Paket yang dipilih oleh pengguna
-  String? selectedPackage;
 
   // Berat laundry dalam kg (diinput oleh pengguna)
   int weight = 0;
@@ -40,11 +65,7 @@ class _UpdateCustomerPageState extends State<UpdateCustomerPage> {
       setState(() {
         calculatedPrice = (weight * laundryPackages[selectedPackage!]!).toInt();
         _ammountCtrl.text = calculatedPrice.toString();
-      });
-    } else {
-      setState(() {
-        calculatedPrice = 0;
-        _ammountCtrl.text = calculatedPrice.toString();
+        _priceController.text = 'Rp ${calculatedPrice.toStringAsFixed(0)}';
       });
     }
   }
@@ -278,11 +299,7 @@ class _UpdateCustomerPageState extends State<UpdateCustomerPage> {
                             ),
                           ),
                           readOnly: true, // Field tidak dapat diubah
-                          controller: TextEditingController(
-                            text: calculatedPrice > 0
-                                ? 'Rp ${calculatedPrice.toStringAsFixed(0)}'
-                                : 'Rp 0',
-                          ),
+                          controller: _priceController,
                         ),
                       ),
                     ],
@@ -291,10 +308,23 @@ class _UpdateCustomerPageState extends State<UpdateCustomerPage> {
                     height: 60,
                   ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        Navigator.pushReplacementNamed(
-                            context, AppRoutes.onProgress);
+                        Onprogress data = Onprogress(
+                            name: _nameCustomerCtrl.text,
+                            address: _addressCtrl.text,
+                            phone: _noTlpCtrl.text,
+                            weight: _weightCtrl.text,
+                            amount: _ammountCtrl.text,
+                            package: _packageCtrl.text,
+                            date: widget.customerDetailOnProgressUpdate.date,
+                            time: widget.customerDetailOnProgressUpdate.time);
+                        String id =
+                            widget.customerDetailOnProgressUpdate.id.toString();
+                        await OnProgress().ubah(data, id).then((onValue) {
+                          Navigator.pushReplacementNamed(
+                              context, AppRoutes.onProgress);
+                        });
                       }
                     },
                     style: ElevatedButton.styleFrom(

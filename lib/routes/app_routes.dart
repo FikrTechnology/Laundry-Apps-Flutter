@@ -43,13 +43,18 @@ class AppRoutes {
             customerDetailOnProgress: customerDetailOnProgress,
           ),
         );
-      case updateCustomer:
-        return MaterialPageRoute(builder: (_) => const UpdateCustomerPage());
       case customerDetailOnDone:
         final customerDetailOnDone = settings.arguments as Ondone;
         return MaterialPageRoute(
           builder: (_) => CustomerDetailOnDonePage(
             customerDetailOnDone: customerDetailOnDone,
+          ),
+        );
+      case updateCustomer:
+        final customerDetailOnProgressUpdate = settings.arguments as Onprogress;
+        return MaterialPageRoute(
+          builder: (_) => UpdateCustomerPage(
+            customerDetailOnProgressUpdate: customerDetailOnProgressUpdate,
           ),
         );
       default:
