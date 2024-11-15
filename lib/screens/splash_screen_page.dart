@@ -14,19 +14,9 @@ class SplashScreenState extends State<SplashScreen> {
     _navigateToLogin();
   }
 
-  _navigateToLogin() async {
-    // WidgetsFlutterBinding.ensureInitialized();
-    // var token = await UserInfo().getToken();
-    // var token = "hello";
-    await Future.delayed(const Duration(seconds: 3), () {
-      // Check if the widget is still mounted before using the context
-      // if (mounted) {
-        // if (token == null) {
-          Navigator.pushReplacementNamed(context, AppRoutes.login);
-        // }else{
-          // Navigator.pushReplacementNamed(context, AppRoutes.home);
-        // }
-      // }
+  _navigateToLogin() {
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
     });
   }
 

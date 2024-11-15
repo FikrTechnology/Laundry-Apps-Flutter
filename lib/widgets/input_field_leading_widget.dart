@@ -29,7 +29,13 @@ class TextFieldLeading extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          TextField(
+          TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return '*Harap isi $label';
+              }
+              return null;
+            },
             controller: controller,
             decoration: InputDecoration(
               labelText: hintText,

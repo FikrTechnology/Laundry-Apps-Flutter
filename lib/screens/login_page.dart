@@ -8,6 +8,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameCtrl = TextEditingController();
   final TextEditingController _passwordCtrl = TextEditingController();
 
@@ -18,33 +19,38 @@ class _LoginPageState extends State<LoginPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  'assets/image/logo_login.svg',
-                  height: 200,
-                  width: 300,
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/image/logo_login.svg',
+                      height: 200,
+                      width: 300,
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    TextFieldLeading(
+                      label: 'Username',
+                      hintText: 'Masukan Username',
+                      icon: Icons.email_outlined,
+                      controller: _usernameCtrl,
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    TextFieldLeading(
+                      label: 'Password',
+                      hintText: 'Masukan Password',
+                      icon: Icons.lock_outline,
+                      controller: _passwordCtrl,
+                    ),
+                  ],
                 ),
-                const SizedBox(
-                  height: 50,
-                ),
-                TextFieldLeading(
-                  label: 'Username',
-                  hintText: 'Masukan Username',
-                  icon: Icons.email_outlined,
-                  controller: _usernameCtrl,
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                TextFieldLeading(
-                  label: 'Password',
-                  hintText: 'Masukan Password',
-                  icon: Icons.lock_outline,
-                  controller: _passwordCtrl,
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -59,30 +65,29 @@ class _LoginPageState extends State<LoginPage> {
             ),
             padding: const EdgeInsets.symmetric(vertical: 10),
           ),
-          onPressed: () async {
-            // String username = _usernameCtrl.text;
-            // String password = _passwordCtrl.text;
-            // await LoginService().login(username, password).then((value) {
-            //   if (value == true) {
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              String username = _usernameCtrl.text;
+              String password = _passwordCtrl.text;
+              if (username == 'admin' && password == 'admin') {
                 Navigator.pushReplacementNamed(context, AppRoutes.home);
-            //   } else {
-            //     AlertDialog alertDialog = AlertDialog(
-            //       content: const Text('Username atau password tidak valid'),
-            //       actions: [
-            //         ElevatedButton(
-            //           onPressed: () {
-            //             Navigator.pop(context);
-            //           },
-            //           style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.green),
-            //           child: const Text('OK'),
-            //         )
-            //       ],
-            //     );
-            //     showDialog(
-            //         context: context, builder: (context) => alertDialog);
-            //   }
-            // });
+              } else {
+                AlertDialog alertDialog = AlertDialog(
+                  content: const Text('Username atau password tidak valid'),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
+                      child: const Text('OK'),
+                    )
+                  ],
+                );
+                showDialog(context: context, builder: (context) => alertDialog);
+              }
+            }
           },
           child: const Text(
             'Masuk',
