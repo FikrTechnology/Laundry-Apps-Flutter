@@ -42,14 +42,17 @@ class _DoneListPageState extends State<DoneListPage> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       print(snapshot.data[index].toJson());
-                      return CardOndone(
-                          date: snapshot.data[index].dateOut,
-                          name: snapshot.data[index].name,
-                          onCardTap: () {
-                            Navigator.pushNamed(
-                                context, AppRoutes.customerDetailOnDone,
-                                arguments: snapshot.data[index]);
-                          });
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: CardOndone(
+                            date: snapshot.data[index].dateOut,
+                            name: snapshot.data[index].name,
+                            onCardTap: () {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.customerDetailOnDone,
+                                  arguments: snapshot.data[index]);
+                            }),
+                      );
                     });
               }),
         ),
